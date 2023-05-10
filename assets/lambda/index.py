@@ -28,7 +28,7 @@ def handler(event: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
 
     paths = [c.path for c in content]
 
-    return {"statusCode": 200, "body": json.dumps(paths)}
+    return {"statusCode": 200, "body": ",".join(paths)}
 
 
 if __name__ == "__main__":
