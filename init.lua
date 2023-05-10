@@ -13,7 +13,7 @@ function get_contents(branch)
     end
 end
 
-local arg1, = ...
+local arg1 = ...
 
 if arg1 != nil
     get_cotnets(arg1)
