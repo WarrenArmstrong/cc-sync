@@ -15,6 +15,6 @@ end
 
 local arg1 = ...
 
-if arg1 != nil
-    get_cotnets(arg1)
+if arg1 != nil then
+    get_contents(arg1)
 end
