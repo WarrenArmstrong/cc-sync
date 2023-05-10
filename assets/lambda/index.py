@@ -1,3 +1,4 @@
+import itertools as it
 import json
 import logging
 import re
@@ -24,11 +25,19 @@ def handler(event: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
 
     repo = g.get_repo("WarrenArmstrong/cc-sync")
 
-    content = repo.get_contents(path="", ref=branch)
+    contents = _get_contents(repo=repo, path="", ref=branch)
 
-    paths = [c.path for c in content]
+    paths = [c.path for c in contents]
 
     return {"statusCode": 200, "body": ",".join(paths)}
+
+
+def _get_contents(repo: Any, path: str, ref: str) -> list[Any]:
+    contents = repo.get_contents(path=path, ref=ref)
+
+    return it.chain.from_iterable(
+        [_get_contents(repo, c.path, ref) if c.type == "dir" else [c] for c in contents]
+    )
 
 
 if __name__ == "__main__":
