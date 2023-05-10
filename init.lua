@@ -1,11 +1,9 @@
 function get_contents(branch)
-    pathRes = http.get("https://pdhaambzdi.execute-api.us-east-1.amazonaws.com/" .. branch)
-    paths = pathRes.readAll()
+    paths = http.get("https://pdhaambzdi.execute-api.us-east-1.amazonaws.com/" .. branch).readAll()
 
     for path in string.gmatch(paths, "([^,]+)") do
         print("Downloading: " .. path)
-        contentRes = http.get("https://raw.githubusercontent.com/WarrenArmstrong/cc-sync/" .. branch .. "/" .. path)
-        content = contentRes.readAll()
+        content = http.get("https://raw.githubusercontent.com/WarrenArmstrong/cc-sync/" .. branch .. "/" .. path).readAll()
 
         f = fs.open(path, "w")
         f.write(content)
