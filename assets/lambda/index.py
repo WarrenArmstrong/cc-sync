@@ -1,21 +1,35 @@
 import json
+import logging
+import re
+from typing import Any
 
-def handler(event, context):
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Hello')
-    }
+from github import Github
 
-# import awsgi
-# from flask import Flask, jsonify
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
-# app = Flask(__name__)
-
-
-# @app.route("/hello")
-# def index():
-#     return jsonify(status=200, message="OK")
+branch_pattern = re.compile(r"^content-[a-zA-Z0-9]*$")
 
 
-# def handler(event, context):
-#     return awsgi.response(app, event, context, base64_content_types={"image/png"})
+def handler(event: dict[str, Any], context: dict[str, Any]) -> dict[str, Any]:
+    branch = event["pathParameters"]["branch"]
+
+    if not branch_pattern.match(branch):
+        return {
+            "statusCode": 400,
+            "body": f'"{branch}" is an invalid branch name. Must follow this pattern: "{branch_pattern.pattern}"',
+        }
+
+    g = Github()
+
+    repo = g.get_repo("WarrenArmstrong/cc-sync")
+
+    content = repo.get_contents(path="", ref=branch)
+
+    paths = [c.path for c in content]
+
+    return {"statusCode": 200, "body": json.dumps(paths)}
+
+
+if __name__ == "__main__":
+    print(handler({"pathParameters": {"branch": "content-dev"}}, {}))

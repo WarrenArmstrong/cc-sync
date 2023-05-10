@@ -1,11 +1,11 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as path from 'path'
-import * as logs from 'aws-cdk-lib/aws-logs'
-// import { HttpUrlIntegration, HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha';
-import * as apigwv2 from '@aws-cdk/aws-apigatewayv2-alpha'
-// import * as apigwv2integrations from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as path from 'path';
+import * as logs from 'aws-cdk-lib/aws-logs';
+import * as apigwv2 from '@aws-cdk/aws-apigatewayv2-alpha';
 import { HttpLambdaIntegration } from '@aws-cdk/aws-apigatewayv2-integrations-alpha'
 import { mainModule } from 'process';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
@@ -14,40 +14,48 @@ export class CcSyncStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const apiFunctionRole = new iam.Role(this, 'APIFunctionRole', {
+      roleName: 'APIFunctionRole',
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com')
+    })
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'CcSyncQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    apiFunctionRole.addManagedPolicy(
+      iam.ManagedPolicy.fromManagedPolicyArn(
+        this,
+        'AWSLambdaBasicExecutionRole',
+        'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      )
+    )
 
-    const testFunction = new lambda.Function(this, 'TestFunction', {
-      code: lambda.Code.fromAsset(path.join(__dirname, '/../assets/lambda')),
+    const apiFunction = new lambda.Function(this, 'APIFunction', {
+      code: lambda.Code.fromAsset(path.join(__dirname, '/../assets/lambda'), {
+        bundling: {
+          image: lambda.Runtime.PYTHON_3_10.bundlingImage,
+          command: [
+            'bash', '-c',
+            'pip install -r requirements.txt -t /asset-output && cp -au . /asset-output'
+          ]
+        }
+      }),
       handler: 'index.handler',
       runtime: lambda.Runtime.PYTHON_3_10,
       architecture: lambda.Architecture.X86_64,
-      description: 'test-function',
-      // logRetention: logs.RetentionDays.ONE_WEEK
+      description: 'cc-sync api function',
+      logRetention: logs.RetentionDays.ONE_WEEK,
       memorySize: 128,
-      timeout: cdk.Duration.seconds(10)
+      timeout: cdk.Duration.seconds(10),
+      role: apiFunctionRole
     })
 
-    const testIntegration = new HttpLambdaIntegration('TestIntegration', testFunction)
+    const lambdaIntegration = new HttpLambdaIntegration('LambdaIntegration', apiFunction)
 
-    // const testIntegration = new apigwv2.HttpIntegration(this, 'TestIntegration', {
+    const api = new apigwv2.HttpApi(this, 'CCSyncApi')
 
-    // })
-
-    // apigwv2.httpInt
-
-    const testApi = new apigwv2.HttpApi(this, 'TestApi')
-
-    testApi.addRoutes({
-      path: '/hello',
+    api.addRoutes({
+      path: '/{branch}',
       methods: [apigwv2.HttpMethod.GET],
-      integration: testIntegration
+      integration: lambdaIntegration
     })
-
-
+    
   }
 }
