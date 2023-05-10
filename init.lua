@@ -15,6 +15,6 @@ end
 
 local arg1 = ...
 
-if arg1 != nil then
+if arg1 ~= nil then
     get_contents(arg1)
 end
