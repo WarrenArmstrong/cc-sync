@@ -29,6 +29,7 @@ local function load_state(filename)
             end
         end
     end
+    file.close()
     return state
 end
 
@@ -77,7 +78,6 @@ function init(filename, initial_state)
         local state_file_name = index_to_filename(filename, index)
         if fs.exists(state_file_name) then        
             state = load_state(state_file_name)
-            state_file.close()
         else
             print("Int Persist: Could not recover from corrupt index file, starting fresh...")
         end
