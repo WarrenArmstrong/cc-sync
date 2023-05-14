@@ -71,6 +71,7 @@ function init(filename, initial_state)
             print("Int Persist: Index file corrupt. Reseting index to 0...")
             index_file = fs.open(filename, "w")
             index_file.write("0")
+            index_file.close()
             index_file = fs.open(filename, "r")
             index = 0
         end
