@@ -88,8 +88,6 @@ function init(filename, initial_state)
         index_file.write("0")
         index_file = fs.open(filename, "r")
     end
-    -- flush is probs not needeed because of close
-    index_file.flush()
     index_file.close()
 
     return state
