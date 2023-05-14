@@ -67,12 +67,12 @@ function init(filename, initial_state)
     if fs.exists(filename) then
         index_file = fs.open(filename, "r")
         index = get_index(index_file)
+        index_file.close()
         if nil == index then
             print("Int Persist: Index file corrupt. Reseting index to 0...")
             index_file = fs.open(filename, "w")
-            index_file.write("0")
+            set_index(index_file, 0)
             index_file.close()
-            index_file = fs.open(filename, "r")
             index = 0
         end
         -- get the file that should have the state
@@ -86,10 +86,9 @@ function init(filename, initial_state)
         print("Int Persist: Index file not found assuming fresh state...")
         -- Initilize the file and reopen it for reading
         index_file = fs.open(filename, "w")
-        index_file.write("0")
-        index_file = fs.open(filename, "r")
+        set_index(index_file, 0)
+        index_file.close()
     end
-    index_file.close()
 
     return state
 end
@@ -110,6 +109,14 @@ function save(state)
     -- reopen the file for writing
     index = get_index(index_file)
     index_file.close()
+
+    if nil == index then
+        print("Int Persist: Corrupted index file. Resetting to zero...")
+        -- set it to 1 so it will go back to zero
+        -- when it is incramented
+        index = 1
+    end
+
     index_file = fs.open(g_filename, "w")
 
     -- make sure to write to the other index
