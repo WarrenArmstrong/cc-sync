@@ -109,6 +109,7 @@ function save(state)
     -- after we arquire the index we will need to change it so 
     -- reopen the file for writing
     index = get_index(index_file)
+    index_file.close()
     index_file = fs.open(g_filename, "w")
 
     -- make sure to write to the other index
@@ -120,6 +121,10 @@ function save(state)
 
     save_state(state_file, state)
 
+    state_file.close()
+
     -- if the previous function finished we are safe to update the index
     set_index(index_file, index)
+
+    index_file.close()
 end
