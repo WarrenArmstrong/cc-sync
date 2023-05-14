@@ -61,7 +61,7 @@ function init(filename, initial_state)
     local state = initial_state
     local index_file = nil
     local index = 0
-    if fs.exists(filename)
+    if fs.exists(filename) then
     index_file = fs.open(filename, "r")
         index = get_index(index_file)
         if nil == index then
