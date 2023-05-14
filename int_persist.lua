@@ -33,7 +33,7 @@ end
 
 local function save_state(file, state)
     local good = true
-    for k, v in state do
+    for k, v in pairs(state) do
         file.write(k .. "=" .. tostring(v))
     end
     file.flush()
