@@ -25,7 +25,7 @@ local function load_state(file)
         if valid then
             state[var] = value
         else
-            print("Int Persist: Bad line[" .. string(l) .. "]: " .. line)
+            print("Int Persist: Bad line[" .. tostring(l) .. "]: " .. line)
         end
     end
     return state
@@ -34,7 +34,7 @@ end
 local function save_state(file, state)
     local good = true
     for k, v in state do
-        file.write(k .. "=" .. string(v))
+        file.write(k .. "=" .. tostring(v))
     end
     file.flush()
     -- acording to the api these function have no indication
@@ -43,7 +43,7 @@ local function save_state(file, state)
 end
 
 local function set_index(file, index)
-    file.write(string(index))
+    file.write(tostring(index))
     file.flush()
 end
 
@@ -52,7 +52,7 @@ local function get_index(file)
 end
 
 local function index_to_filename(filename, index)
-    return filename .. '.' .. string(index)
+    return filename .. '.' .. tostring(index)
 end
 
 local g_filename = nil
