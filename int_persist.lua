@@ -4,6 +4,7 @@
 
 
 local function load_state(file)
+    local state = {}
     for l, line in file:lines() do
         local var = ""
         local value = tonumber(0)
@@ -19,15 +20,15 @@ local function load_state(file)
                 end
             else
                 valid = false
+            end
         end
-        
         if valid then
             state[var] = value
         else
             print("Int Persist: Bad line[" .. string(l) .. "]: " .. line)
         end
-
     end
+    return state
 end
 
 local function save_state(file, state)
