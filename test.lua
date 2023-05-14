@@ -10,5 +10,5 @@ while true do
     state.x = state.x + 1
     --state.data = state.data
     state.house = state.x + state.house
-    int_persist.save()
+    int_persist.save(state)
 end
