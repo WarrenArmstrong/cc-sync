@@ -11,16 +11,11 @@ local function load_state(filename)
             local value = tonumber(0)
             -- valid keeps track of if the current line is valid
             local valid = false
-            for k, v in string.gmatch(line,"=") do
-                if 0 == k then
-                    var = v
-                elseif 1 == k then
-                    value = tonumber(v)
-                    if nil ~= value then
-                        valid = true
-                    end
-                else
-                    valid = false
+            for k, v in (line):gmatch("(%w+)%s*=%s*(%w+)") do
+                var = k
+                value = tonumber(v)
+                if nil ~= value then
+                    valid = true
                 end
             end
             if valid then
