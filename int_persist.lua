@@ -62,7 +62,7 @@ function init(filename, initial_state)
     local index_file = nil
     local index = 0
     if fs.exists(filename) then
-    index_file = fs.open(filename, "r")
+        index_file = fs.open(filename, "r")
         index = get_index(index_file)
         if nil == index then
             print("Int Persist: Index file corrupt. Reseting index to 0...")
@@ -78,7 +78,7 @@ function init(filename, initial_state)
             state = load_state(state_file)
             state_file.close()
         else
-            print()"Int Persist: Could not recover from corrupt index file, starting fresh...")
+            print("Int Persist: Could not recover from corrupt index file, starting fresh...")
         end
     else
         print("Int Persist: Index file not found assuming fresh state...")
