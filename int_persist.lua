@@ -1,7 +1,5 @@
 
 
-local function get_line(str)
-
 
 local function load_state(filename)
     local state = {}
@@ -35,7 +33,7 @@ end
 local function save_state(file, state)
     local good = true
     for k, v in pairs(state) do
-        file.write(k .. "=" .. tostring(v))
+        file.write(k .. "=" .. tostring(v) .. "\n")
     end
     file.flush()
     -- acording to the api these function have no indication
