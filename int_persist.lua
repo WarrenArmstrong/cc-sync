@@ -1,10 +1,11 @@
 
 
+local function get_line(str)
 
 
-
-local function load_state(file)
+local function load_state(filename)
     local state = {}
+    local file = io.open(filename,"r")
     for l, line in file:lines() do
         local var = ""
         local value = tonumber(0)
@@ -75,8 +76,7 @@ function init(filename, initial_state)
         -- get the file that should have the state
         local state_file_name = index_to_filename(filename, index)
         if fs.exists(state_file_name) then        
-            local state_file = fs.open(state_file_name, "r")
-            state = load_state(state_file)
+            state = load_state(state_file_name)
             state_file.close()
         else
             print("Int Persist: Could not recover from corrupt index file, starting fresh...")
