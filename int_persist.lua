@@ -4,7 +4,8 @@
 local function load_state(filename)
     local state = {}
     local file = io.open(filename,"r")
-    for l, line in file:lines() do
+    local l = 0
+    for line in file:lines() do
         if nil ~= line then
             local var = ""
             local value = tonumber(0)
@@ -28,6 +29,7 @@ local function load_state(filename)
                 print("Int Persist: Bad line[" .. tostring(l) .. "]: " .. line)
             end
         end
+        l = l + 1
     end
     file:close()
     return state
