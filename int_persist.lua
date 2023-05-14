@@ -29,7 +29,7 @@ local function load_state(filename)
             end
         end
     end
-    file.close()
+    file:close()
     return state
 end
 
