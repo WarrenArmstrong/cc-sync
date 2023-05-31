@@ -9,8 +9,8 @@ function get_used_slots(items)
 end
 
 while true do
-  if get_item_count(disp.list()) >= 8 then
-    while get_item_count(disp.list()) > 0 do
+  if get_used_slots(disp.list()) >= 8 then
+    while get_used_slots(disp.list()) > 0 do
       redstone.setOutput('top', not redstore.getOutput('top'))
       os.sleep(0.1)
     end
