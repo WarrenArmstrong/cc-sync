@@ -11,7 +11,7 @@ end
 while true do
   if get_used_slots(disp.list()) >= 8 then
     while get_used_slots(disp.list()) > 0 do
-      redstone.setOutput('top', not redstore.getOutput('top'))
+      redstone.setOutput('top', not redstone.getOutput('top'))
       os.sleep(0.1)
     end
   end
