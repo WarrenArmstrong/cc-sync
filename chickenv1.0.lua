@@ -15,5 +15,5 @@ while true do
       os.sleep(0.1)
     end
   end
-os.sleep(10)
+  os.sleep(10)
 end
