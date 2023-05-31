@@ -10,7 +10,7 @@ end
 
 while true do
   if get_item_count(disp.list()) >= 8 then
-    while get_item_count(disp.list()) > 0 then
+    while get_item_count(disp.list()) > 0 do
       redstone.setOutput('top', not redstore.getOutput('top'))
       os.sleep(0.1)
     end
