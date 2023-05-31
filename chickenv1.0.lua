@@ -2,7 +2,7 @@ local disp = peripheral.find("minecraft:dispenser")
 
 function get_used_slots(items)
   local count = 0
-  for slot, item in pairs(items.list()) do
+  for slot, item in pairs(items) do
     count = count + 1
   end
   return count
